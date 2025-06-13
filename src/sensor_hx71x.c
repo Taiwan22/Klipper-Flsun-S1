@@ -43,7 +43,8 @@ static struct task_wake wake_hx71x;
  * Low-level bit-banging
  ****************************************************************/
 
-#define MIN_PULSE_TIME nsecs_to_ticks(200)
+ //#define MIN_PULSE_TIME nsecs_to_ticks(200) // FLSUN Changes
+#define MIN_PULSE_TIME nsecs_to_ticks(1000) // FLSUN Changes
 
 static uint32_t
 nsecs_to_ticks(uint32_t ns)
@@ -82,14 +83,16 @@ static uint32_t
 hx71x_raw_read(struct gpio_in dout, struct gpio_out sclk, int num_bits)
 {
     uint32_t bits_read = 0;
+    hx71x_delay(); // FLSUN Changes
     while (num_bits--) {
         irq_disable();
         gpio_out_toggle_noirq(sclk);
         hx71x_delay_noirq();
         gpio_out_toggle_noirq(sclk);
-        uint_fast8_t bit = gpio_in_read(dout);
+        //uint_fast8_t bit = gpio_in_read(dout); // FLSUN Changes
         irq_enable();
         hx71x_delay();
+        uint_fast8_t bit = gpio_in_read(dout); // FLSUN Changes
         bits_read = (bits_read << 1) | bit;
     }
     return bits_read;
