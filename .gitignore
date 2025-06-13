@@ -6,3 +6,4 @@ out
 klippy/.version
 *.DS_Store
 desktop.ini
+/.vs
